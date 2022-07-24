@@ -1,0 +1,1 @@
+## Studying the Equitability of Policy Interventions Using a Heterogenous Policy Effect Approach: An Application to the Dutch Decentralization of the Social Domain
