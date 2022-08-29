@@ -1,3 +1,6 @@
+## Functions for scripts 01
+
+## 01_merger_data.R
 recover_wmo_rin <- function(x) {
   ## Function to return those rinpersons who have used wmo.
   #' @param x Dataframe including both rinpersoon and wmo_gebruik.

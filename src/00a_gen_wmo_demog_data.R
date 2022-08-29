@@ -2,18 +2,18 @@
 ## Description: This script generates datasets containing merged data on
 ## Social Assistance use and demographics
 ## Input:
-## - ["data/wmo/yyyy/rin_wmo.rds"]
-## - Information on social assistance use for the years 2015-2019
-## - ["data/demog/yyyy/rin_demog.rds"]
-## - Information on demographics for the years 2015-2019
+#' @input ["data/wmo/yyyy/rin_wmo.rds"]
+#' @input Information on social assistance use for the years 2015-2019
+#' @input ["data/demog/yyyy/rin_demog.rds"]
+#' @input Information on demographics for the years 2015-2019
 ## Output:
-## - ["data/edit/wmo_demog_15_19.rda"]
-## - wmo_demog_2015 dataframe with demograpics and social assistance use in 2015
-## - wmo_demog_2016 dataframe with demograpics and social assistance use in 2016
-## - wmo_demog_2017 dataframe with demograpics and social assistance use in 2017
-## - wmo_demog_2018 dataframe with demograpics and social assistance use in 2018
-## - wmo_demog_2019 dataframe with demograpics and social assistance use in 2019
-## - kwb-2016 dataframe with information on all municipalities
+#' @output ["data/edit/wmo_demog_15_19.rda"]
+#' @output wmo_demog_2015 dataframe with demograpics and social assistance use in 2015
+#' @output wmo_demog_2016 dataframe with demograpics and social assistance use in 2016
+#' @output wmo_demog_2017 dataframe with demograpics and social assistance use in 2017
+#' @output wmo_demog_2018 dataframe with demograpics and social assistance use in 2018
+#' @output wmo_demog_2019 dataframe with demograpics and social assistance use in 2019
+#' @output kwb-2016 dataframe with information on all municipalities
 ###
 
 ## Load libraries

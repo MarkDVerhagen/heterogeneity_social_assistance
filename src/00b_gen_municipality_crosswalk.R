@@ -2,13 +2,13 @@
 ## Description: This script generates a crosswalk across years to address
 ## mergers of municipalities across time
 ## Input:
-## - ["data/raw/kwb-yyyy.rds"]
-## - Spatial information provided by Statistics Netherlands for the years 2016-2019
+#' @input ["data/raw/kwb-yyyy.rds"]
+#' @input Spatial information provided by Statistics Netherlands for the years 2016-2019
 ## Output:
-## - ["data/edit/cw_bu_gem_2019.rda"]
-## - kwb_2016: all municipalities in 2016 including the 2019 equivalent
-## - kwb_2017: all municipalities in 2017 including the 2019 equivalent
-## - kwb_2018: all municipalities in 2018 including the 2019 equivalent
+#' @output ["data/edit/cw_bu_gem_2019.rda"]
+#' @output kwb_2016: all municipalities in 2016 including the 2019 equivalent
+#' @output kwb_2017: all municipalities in 2017 including the 2019 equivalent
+#' @output kwb_2018: all municipalities in 2018 including the 2019 equivalent
 ###
 
 ## Load libraries

@@ -1,7 +1,20 @@
-### Functions for 02_basic_descriptives.R
+## Functions for scripts 02
+
+## 02_basic_descriptives.R
 remove_numerics <- function(df) {
   names(df) <- gsub("_\\d{4}", "", names(df))
   return(df)
+}
+
+make_output_ready <- function(table, start_col = 3) {
+  ## Function to make a count table output ready for the RA environment
+  #' @param table Table to be outputted from the RA environment
+  #' @param start_col Column from which numeric counts are included
+  #' @return Original table but with all counts averaged to multiples of 5
+
+  table[, start_col:ncol(table)] <- DescTools::RoundTo(table[, start_col:ncol(table)], 5)
+  table[, start_col:ncol(table)][table[, start_col:ncol(table)] < 10] <- NA
+  return(table)
 }
 
 gen_desc_wmo_use <- function(df, group_vars = c("year")) {
@@ -41,7 +54,6 @@ gen_mean_use_2016_2019 <- function(df, mean_var = "y") {
   names(summ_df)[2:4] <- paste0(mean_var, "_", names(summ_df)[2:4])
   return(summ_df)
 }
-
 
 
 extract_gem_info <- function(data) {

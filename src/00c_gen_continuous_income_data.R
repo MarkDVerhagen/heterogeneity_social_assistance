@@ -2,11 +2,11 @@
 ## Description: This script generates datasets with continuous
 ## household income data
 ## Input:
-## - ["data/numeric_income/yyyy/rin_num_income.csv"]
-## - Information on continuous rather than categorical income for the years 2016-2019
+#' @input ["data/numeric_income/yyyy/rin_num_income.csv"]
+#' @input Information on continuous rather than categorical income for the years 2016-2019
 ## Output:
-## - ["data/numeric_income/yyyy/rin_num_income.rds"]
-## - Formatted information on continuous rather than categorical income for the years 2016-2019
+#' @output ["data/numeric_income/yyyy/rin_num_income.rds"]
+#' @output Formatted information on continuous rather than categorical income for the years 2016-2019
 ###
 
 ## Load data

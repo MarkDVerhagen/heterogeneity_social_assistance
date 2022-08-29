@@ -48,3 +48,13 @@ These are located in the `H:/data/` folder within CBS' secure Remote Access Envi
 *00c_gen_continuous_income_data.R* : Change income data to a numeric
 *00_fetch_educ.do* : Get education data from `.dta` files
 *00_fetch_num_income.do* : Get income data from `.dta` files
+
+### 01.* scripts
+This script stacks population registry data for the years 2016-2019. It includes income data and ensures only individuals living in a municipality that conistently reported data in 2016 and 2019 are included.
+
+*01_merge_data.R* : Stacks 2016 and 2019 and includes income and municipality data.
+
+### 02.* scripts
+This script generates a numbr of descriptive tables.
+
+*02_basic_descriptives.R* : Generates five descriptive tables.
