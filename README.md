@@ -3,33 +3,41 @@
 
 ```bash
 ├── src
+## Setup datasets
 │   ├── 00a_gen_wmo_demog_data.R
 │   ├── 00b_gen_municipality_crosswalk.R
 │   ├── 00c_gen_continuous_income_data.R
 │   ├── 00_fetch_educ.do
 │   ├── 00_fetch_num_income.do
 │   ├── 00_functions.R
+## Merge data into analysis dataset
 │   ├── 01_functions.R
 │   ├── 01_merge_data.R
 │   ├── 01_visualize_output.R
+## Generate basic descriptives
 │   ├── 02_basic_descriptives.R
 │   ├── 02_functions.R
+## Establish basic determinants of social assistance use
 │   ├── 03_functions.R
 │   ├── 03_model_descriptives.R
+## Estimate main models (causal tree, causal forest, ates)
 │   ├── 04a_gen_ates.R
 │   ├── 04b_grf_heterogeneity.R
 │   ├── 04c_ct_heterogeneity.R
 │   ├── 04_functions.R
+## Analyze main models (causal tree, causal forest)
 │   ├── 05a_analyze_grf.R
 │   ├── 05a_prep_sets.R
 │   ├── 05b_analyze_ct.R
 │   ├── 05c_analyze_groups.R
 │   ├── 05_functions.R
+## Generate output for paper
 │   ├── 06a_make_tables.R
 │   ├── 06b_make_figures.R
 │   ├── 06c_gem_analysis_plots.R
 │   ├── 06d_group_plots.r
 │   ├── 06_functions.R
+## Robustness analyses
 │   ├── r_2015_2016_treat.R
 │   ├── r_education.R
 │   ├── r_functions.R
