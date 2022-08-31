@@ -4,22 +4,22 @@
 ## random intercepts, robustness when including education and OOS prediction
 ## of municipality level use
 ## Input:
-#' @input full_df_2016_2019.rds dataset including all relevant data for 2016 and 2019
-#' @input H:/data/education/2016/rin_educ.rds Dataframe w education for the 2016 population
-#' @input H:/data/education/2019/rin_educ.rds Dataframe w education for the 2016 population
+#' @input full_df_2016_2019_inc dataset including all relevant data for 2016 and 2019
+#' @input H:/data/education/2016/rin_educ Dataframe w education for the 2016 population
+#' @input H:/data/education/2019/rin_educ Dataframe w education for the 2016 population
 ## Output:
-#' @output lm_treat model.rds object from LPM with social assistance use as outcome (2016 & 2019)
-#' @output lm_2016 model.rds object from LPM with social assistance use as outcome (2016)
-#' @output lm_2016_educ model.rds object from LPM inc education with social assistance use as outcome (2016)
-#' @output lmer_2016 model.rds object from LPM inc random intercepts with social assistance use as outcome (2016)
-#' @output lmer_2016_educ model.rds object from LPM inc random intercepts and educ with social assistance use as outcome (2016)
-#' @output tables/coefs_2016_v2.xlsx coefficients of lm_2016
-#' @output tables/coefs_2016_educ.xlsx coefficients of lm_2016_educ
-#' @output tables/coefs_lmer_2016_v2.xlsx coefficients of lmer_2016
-#' @output tables/re_coefs_2016.xlsx random intercepts of lmer_2016
-#' @output tables/coefs_lmer_2016_educ.xlsx coefficients of lmer_2016_educ
-#' @output tables/re_coefs_2016_educ.xlsx random intercepts of lmer_2016_educ
-#' @output tables/wmo_2016_predict.xlsx OOS-predictions of municipality use (2016)
+#' @output lm_treat model object from LPM with social assistance use as outcome (2016 & 2019)
+#' @output lm_2016 model object from LPM with social assistance use as outcome (2016)
+#' @output lm_2016_educ model object from LPM inc education with social assistance use as outcome (2016)
+#' @output lmer_2016 model object from LPM inc random intercepts with social assistance use as outcome (2016)
+#' @output lmer_2016_educ model object from LPM inc random intercepts and educ with social assistance use as outcome (2016)
+#' @output tables/coefs_2016 coefficients of lm_2016
+#' @output tables/coefs_2016_educ coefficients of lm_2016_educ
+#' @output tables/coefs_lmer_2016 coefficients of lmer_2016
+#' @output tables/re_coefs_2016 random intercepts of lmer_2016
+#' @output tables/coefs_lmer_2016_educ coefficients of lmer_2016_educ
+#' @output tables/re_coefs_2016_educ random intercepts of lmer_2016_educ
+#' @output tables/wmo_2016_predict OOS-predictions of municipality use (2016)
 
 ## Load libraries
 library(lme4)
@@ -30,7 +30,7 @@ library(patchwork)
 source("src/03_functions.R")
 
 ## Load full dataset on 2016 and 2019
-df_analysis <- readRDS("./data/edit/full_df_2016_2019.rds") %>%
+df_analysis <- readRDS("./data/edit/full_df_2016_2019_inc.rds") %>%
   filter(year %in% c(2016, 2019))
 
 ## Include education for robustness
@@ -51,7 +51,6 @@ df_analysis <- df_analysis %>%
   left_join(tot_educ)
 
 ## Generate squared version of age and non-linear income
-df_analysis <- df_analysis[df_analysis$leeftijd >= 18, ]
 df_analysis$leeftijd2 <- df_analysis$leeftijd^2
 df_analysis$income_cat <- round(df_analysis$lower_bound_num / 25)
 
@@ -77,7 +76,7 @@ lm_2016$effects <- c()
 saveRDS(lm_2016, 'models/lm_2016.rds')
 lm_2016_coefs <- gen_coef_df(lm_2016)
 writexl::write_xlsx(lm_2016_coefs,
-                    "./tables/coefs_2016_v2.xlsx")
+                    "./tables/coefs_2016.xlsx")
 
 ## Standard LPM including education
 lm_2016_educ <- lm(y ~ 1 + leeftijd + leeftijd2 + as.factor(herkomst) +
@@ -101,7 +100,7 @@ lmer_2016 <- lmer(y ~ (1 | gem_2019) + leeftijd + leeftijd2 + as.factor(herkomst
 saveRDS(lmer_2016, "models/lmer_2016.rds")
 lmer_2016_coefs <- gen_coef_df(lmer_2016)
 writexl::write_xlsx(lmer_2016_coefs,
-                    "./tables/coefs_lmer_2016_v2.xlsx")
+                    "./tables/coefs_lmer_2016.xlsx")
 
 ## Random intercepts and education
 lmer_2016_educ <- lmer(y ~ (1 | gem_2019) + leeftijd + leeftijd2 + as.factor(herkomst) +

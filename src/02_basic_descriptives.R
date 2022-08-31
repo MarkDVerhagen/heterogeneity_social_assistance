@@ -2,7 +2,7 @@
 ## Description: This script generates basic descriptive
 ## statistics of the analysis set
 ## Input:
-#' @input full analysis dataframe including only municipalities that submitted
+#' @input full_df_2016_2019_inc full analysis dataframe including only municipalities that submitted
 #' @input demog_2016 entire population in 2016
 #' @input demog_2019 entire population in 2019
 #' @input ["data/edit/wmo_demog_15_19.rda"]
@@ -29,7 +29,7 @@ library(tidyverse)
 source("./src_new/02_functions.r")
 
 ## Load analysis data
-full <- readRDS("./data/edit/full_df_2016_2019.rds")
+full <- readRDS("./data/edit/full_df_2016_2019_inc.rds")
 
 ## Load population data
 demog_2016 <- readRDS("H:/data/demog/2016/rin_demog.rds")
@@ -44,8 +44,8 @@ full <- full_all_years %>%
   filter(year %in% c(2016, 2019))
 
 ## Make descriptive tables with yearly use (overall and municipality level)
-yearly_wmo <- gen_desc_wmo_use(full_all_years %>% filter(leeftijd >= 18), group_vars = c("year"))
-yearly_wmo_gem <- gen_desc_wmo_use(full %>% filter(leeftijd >= 18), group_vars = c("year", "gem_2019"))
+yearly_wmo <- gen_desc_wmo_use(full_all_years, group_vars = c("year"))
+yearly_wmo_gem <- gen_desc_wmo_use(full, group_vars = c("year", "gem_2019"))
 
 ## Write tables
 writexl::write_xlsx(make_output_ready(yearly_wmo), "./tables/yearly_wmo.xlsx")
@@ -119,11 +119,11 @@ rm(demog_2016, demog_2019, income_2016, income_2019)
 
 ## Make dummy set based on analysis set
 full_dummy <- make_dummy_set(full)
-sample_desc <- make_desc_dummy(full_dummy %>% filter(leeftijd >= 18))
+sample_desc <- make_desc_dummy(full_dummy)
 pop_dummy <- make_dummy_set(pop_df, pop = TRUE)
 
 ## Make descriptive tables
-pop_desc <- make_desc_dummy(pop_dummy %>% filter(leeftijd >= 18))
+pop_desc <- make_desc_dummy(pop_dummy)
 
 sample_desc_df <- sample_desc %>% t() %>% as.data.frame()
 sample_desc_df$var <- rownames(sample_desc_df)
@@ -154,7 +154,7 @@ writexl::write_xlsx(comb_desc, "./tables/table_desc_2016_2019.xlsx")
 
 ## Table of descriptives by social assistance use
 desc_by_wmo <- make_desc_dummy(
-  full_dummy %>% filter(leeftijd >= 18), group_vars = c("year", "wmo_gebruik_ja")
+  full_dummy, group_vars = c("year", "wmo_gebruik_ja")
   )
 desc_by_wmo_df <- as.data.frame(desc_by_wmo %>% t())
 names(desc_by_wmo_df) <- c("2016_non_wmo", "2016_wmo", "2019_non_wmo", "2019_wmo")
@@ -169,11 +169,11 @@ full$age_cat <- round(full$leeftijd / 10)
 full$income_cat <- as.character(round(full$lower_bound_num / 25))
 
 univ_desc <- rbind(
-  gen_group_value(full %>% filter(leeftijd >= 18), "geslacht"),
-  gen_group_value(full %>% filter(leeftijd >= 18), "herkomst"),
-  gen_group_value(full %>% filter(leeftijd >= 18), "huishoudsamenstelling"),
-  gen_group_value(full %>% filter(leeftijd >= 18), "age_cat"),
-  gen_group_value(full %>% filter(leeftijd >= 18), "income_cat")
+  gen_group_value(full, "geslacht"),
+  gen_group_value(full, "herkomst"),
+  gen_group_value(full, "huishoudsamenstelling"),
+  gen_group_value(full, "age_cat"),
+  gen_group_value(full, "income_cat")
 )
 
 ## Write table

@@ -15,7 +15,7 @@
 #' @input kwb_2017: all municipalities in 2017 including the 2019 equivalent
 #' @input kwb_2018: all municipalities in 2018 including the 2019 equivalent
 ## Output:
-#' @output full_df_2016_2019.rds dataset including all relevant data for 2016 and 2019
+#' @output full_df_2016_2019_inc.rds dataset including all relevant data for 2016 and 2019
 ###
 
 ## Load libraries
@@ -146,9 +146,10 @@ full <- full %>%
 ## Drop NA income
 full <- full[!is.na(full$lower_bound_num), ]  ## Lose <0.01% due to different measurement dates
 
-full$huishoudsamenstelling <- ifelse(full$huishoudsamenstelling %in%  ## Merge Onbekend and Institutioneel
-                                       c("Institutioneel huishouden", "Onbekend"), "Inst_Onbekend",
-                                     as.character(full$huishoudsamenstelling))
+full$huishoudsamenstelling <- ifelse(
+  full$huishoudsamenstelling %in%  ## Merge Onbekend and Institutioneel
+  c("Institutioneel huishouden", "Onbekend"), "Inst_Onbekend",
+  as.character(full$huishoudsamenstelling))
 
 ## Drop NA use (implies individual moved from municipality that did not submit to one that did around new years)
 full <- full[!is.na(full$wmo_gebruik), ]
@@ -159,5 +160,8 @@ assertthat::assert_that( ## Assert that pgb does not feature in use
 assertthat::assert_that(
   all(colMeans(full[(full$wmo_pgb_ind == 1) & (full$y == 1), ] %>% select(starts_with("wmo_"), -wmo_pgb_ind, -wmo_gebruik) == "nee") != 1))
 
+## Only include 18+
+full <- full[full$leeftijd >= 18, ]
+
 ## Save resultant set
-saveRDS(full, "./data/edit/full_df_2016_2019.rds")
+saveRDS(full, "./data/edit/full_df_2016_2019_inc.rds")

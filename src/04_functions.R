@@ -1,3 +1,6 @@
+## Functions for scripts 04
+
+## 04a_gen_ates.R
 library(WeightIt)
 library(ebal)
 library(cobalt)
@@ -71,20 +74,6 @@ ps_ebal_ate <- function(df_list, bal_fun, method = "propensity", munic_set = NUL
   return(df)
 }
 
-gen_bal_plot <- function(w_object, data, w_fun) {
-  ##
-  #' @param w_object A weightit object
-  #' @param data The data
-  #' @param w_fun The weighting function
-  
-  bal.tab(w_object, un = TRUE, m.threshold = 0.1)
-  love.plot(w_fun,
-            data = data,
-            weights = list(w1 = get.w(w_obj)),
-            thresholds = c(m = 0.1)
-  )  
-}
-
 
 generate_treatment_effect <- function(df, method = c("covariate", "entropy", "propensity"), seed=1704,
                                       sample = NULL, munic_set = NULL, covariates = "1 + .", outcome = "y",
@@ -97,16 +86,16 @@ generate_treatment_effect <- function(df, method = c("covariate", "entropy", "pr
   #' @param munic_set Set of municipality code in case separate ATEs have to be calculated
   #' @return Dataframe including the estimated treatment effects for the specific groups
   #' including high and low bounds 
-  
+
   set.seed(seed)
   results <- c()
-  
+
   # subset data in case a custom set of rin codes is provided
   if (!is.null(sample)) {
     df <- df[df$rinpersoon %in% sample, ]
   }
   df$rinpersoon <- NULL
-  
+
   # generate a list of datasets to estimate the ATE on
   if (!is.null(munic_set)) {
     df_list <- lapply(munic_set, FUN = function(x, omit_gem) {
@@ -121,8 +110,7 @@ generate_treatment_effect <- function(df, method = c("covariate", "entropy", "pr
     }
     df_list <- list(df)
   }
-  
-  
+
   if ("covariate" %in% method) {
     df_cov <- covariate_ate(df_list, munic_set = munic_set)
     results <- append(results, list(covariate = df_cov))
@@ -138,11 +126,12 @@ generate_treatment_effect <- function(df, method = c("covariate", "entropy", "pr
   return(results)
 }
 
+## 04b_grf_heterogeneity.R
 gen_samples <- function(df) {
   ##
   #' @param df Dataframe with individual level data pooled across control, treat.
   #' @return List of samples for X, Y, W.
-  
+
   X_sample <- df %>%
     select(gem_2019, huishoudsamenstelling, leeftijd,
            geslacht, lower_bound_num, herkomst, treat)

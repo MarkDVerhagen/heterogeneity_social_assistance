@@ -73,3 +73,8 @@ This script generates basic model insights when relating social assistance use t
 - LPM on 2016 data including random intercepts at municipality level and education
 
 *03_model_descriptives.R* : Generates 5 model objects and 7 tables describing the model coefficients.
+
+### 04.* scripts
+This script estimates the main models for the results section including ATEs using conventional methods and the Causal Tree and GRF approaches.
+
+*04a_gen_ates.R* : Script to generate ATEs using covariate balancing, entropy balancing and propensity score matching.
