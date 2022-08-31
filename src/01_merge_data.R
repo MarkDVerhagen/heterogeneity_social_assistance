@@ -15,7 +15,7 @@
 #' @input kwb_2017: all municipalities in 2017 including the 2019 equivalent
 #' @input kwb_2018: all municipalities in 2018 including the 2019 equivalent
 ## Output:
-#' @output ["./data/edit/full_df_2016_2019.rds"]: dataset including all relevant data for 2016 and 2019
+#' @output full_df_2016_2019.rds dataset including all relevant data for 2016 and 2019
 ###
 
 ## Load libraries

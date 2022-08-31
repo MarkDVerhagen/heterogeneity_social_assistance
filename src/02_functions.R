@@ -2,6 +2,10 @@
 
 ## 02_basic_descriptives.R
 remove_numerics <- function(df) {
+  ## Function to remove year indicators from column names
+  #' @param df Dataframe
+  #' @return Dataframe with year numerics removed from column names
+
   names(df) <- gsub("_\\d{4}", "", names(df))
   return(df)
 }

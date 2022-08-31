@@ -55,6 +55,21 @@ This script stacks population registry data for the years 2016-2019. It includes
 *01_merge_data.R* : Stacks 2016 and 2019 and includes income and municipality data.
 
 ### 02.* scripts
-This script generates a numbr of descriptive tables.
+This script generates a number of descriptive tables, including:
+- Overall descriptives of the population in 2016 and 2019 as well as the analysis set.
+- Descriptives by social assistance use in 2016 and 2019.
+- Number of municipalities submitting data to the registry.
+- Use of WMO in 2016 and 2019 by univariate demographic groups
+- Differences between use per municipality
 
 *02_basic_descriptives.R* : Generates five descriptive tables.
+
+### 03.* scripts
+This script generates basic model insights when relating social assistance use to demographics, including:
+- LPM on 2016 and 2019 data
+- LPM on 2016 data
+- LPM on 2016 data including education
+- LPM on 2016 data including random intercepts at municipality level
+- LPM on 2016 data including random intercepts at municipality level and education
+
+*03_model_descriptives.R* : Generates 5 model objects and 7 tables describing the model coefficients.
