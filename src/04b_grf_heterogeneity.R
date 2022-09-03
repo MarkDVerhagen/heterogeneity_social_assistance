@@ -1,52 +1,45 @@
-### 04_model_descriptives.R
-## Description: Script to assess heterogeneity in the effect of the policy change
+### Script to generate causal forests
+## Input
+#' @input df_2016_2019_inc dataset including all relevant data for 2016 and 2019
+## Output
+#' @output data/edit/overall_samples_033_all.rds the sample used for GRF estimation
+#' @output models/non_gm_tau_forest_033_1250ms_500t_18plus.rds forest estimated without municipality codes
+#' @output models/gm_tau_forest_033_1250ms_500t_18plus.rds forest estimated with municipality codes
+#' @output data/final/vi_gm_tau_forest_033_1250ms_500t_18plus.rds variable importance table including municipality codes
 ###
+
+## Set seed
+set.seed(1704)
+
+## Load libraries
 library(tidyverse)
 library(grf)
 
-
+## Read data
 df_analysis_sample <- readRDS("data/edit/df_analysis_2016_2019_inc.rds")
 df_analysis_sample <- df_analysis_sample %>%
   filter(leeftijd >= 18)
 
+## Transform age into 5-year intervals for computational convenience
 df_analysis_sample$leeftijd <- round(df_analysis_sample$leeftijd / 5)*5
-df_analysis_sample$lower_bound_num <- ifelse(df_analysis_sample$lower_bound_num > 0,
-                                             round(df_analysis_sample$lower_bound_num / 5) * 5,
-                                             df_analysis_sample$lower_bound_num)
+## Transform income into 5% intervals for computational convenience
+df_analysis_sample$lower_bound_num <- ifelse(
+  df_analysis_sample$lower_bound_num > 0,
+  round(df_analysis_sample$lower_bound_num / 5) * 5,
+  df_analysis_sample$lower_bound_num)
 
 ## Merge all very small muicipalities (< 25,000 inhabitants)
 small_gms <- names(table(df_analysis_sample$gem_2019))[(table(df_analysis_sample$gem_2019) < 25000)]
 df_analysis_sample$gem_2019 <- as.character(df_analysis_sample$gem_2019)
-
 df_analysis_sample$gem_2019[df_analysis_sample$gem_2019 %in% small_gms] <- "small"
 
-df_analysis_sample$huishoudsamenstelling <- ifelse(df_analysis_sample$huishoudsamenstelling %in%
-                                                     c("Institutioneel huishouden", "Onbekend"), "Inst_Onbekend",
-                                                   as.character(df_analysis_sample$huishoudsamenstelling))
-
-
-# Make a train set which is a set fraction of the total
-set.seed(1704)
+## Make a train set which is a set fraction of the total
 df_analysis_sample <- df_analysis_sample %>%
   sample_frac(0.33)
 
-# saveRDS(df_analysis_sample_train$rinpersoon, "data/edit/train_sample_075_55.rds")
-
-# df_analysis_sample_test <- df_analysis_sample %>%
-#   filter(!(rinpersoon %in% df_analysis_sample_train$rinpersoon))
-# 
-# ## Unit tests
-# assertthat::assert_that(all(unique(df_analysis_sample_train$gem_2019) %in%
-#                               unique(df_analysis_sample_test$gem_2019)))
-# 
-# assertthat::assert_that(all(unique(df_analysis_sample_train$gem_2019) %in%
-#                               unique(df_analysis_sample$gem_2019)))
-# 
-# n_gem <- as.data.frame(table(df_analysis_sample_train$gem_2019))
-
+## Generate samples requires for causal forest analysis
 overall_samples <- gen_samples(df_analysis_sample)
-
-# saveRDS(overall_samples, "H:/wmo_heterogeneity/data/edit/overall_samples_033_all.rds")
+saveRDS(overall_samples, "data/edit/overall_samples_033_all.rds")
 
 ## Sample analysis excluding gem
 print("Starting analysis witout gem_2019")
@@ -58,9 +51,8 @@ end <- Sys.time()
 
 print(paste0("Time elapsed:", end - start))
 
+## Save forest
 saveRDS(tau_forest, "models/non_gm_tau_forest_033_1250ms_500t_18plus.rds")
-
-grf::average_treatment_effect(tau_forest)
 
 ## Sample analysis including gem
 print("Starting analysis including gem_2019")
@@ -73,12 +65,12 @@ end <- Sys.time()
 
 print(paste0("Time elapsed:", end - start))
 
+## Save forest
 saveRDS(tau_forest, "models/gm_tau_forest_033_1250ms_500t_18plus.rds")
 
-grf::average_treatment_effect(tau_forest)
-
+## Make variable importance dataframe
 var_df <- data.frame(var_imp = grf::variable_importance(tau_forest),
                      variable = names(as.data.frame(tau_forest$X.orig)))
 
+## Save variable importance table
 saveRDS(var_df, "data/final/vi_gm_tau_forest_033_1250ms_500t_18plus.rds")
-

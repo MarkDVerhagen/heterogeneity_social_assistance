@@ -1,7 +1,7 @@
 ### Script to generate basic average treatment effects using
 ## various methods
 ## Input
-#' @input full_df_2016_2019_inc dataset including all relevant data for 2016 and 2019
+#' @input df_2016_2019_inc dataset including all relevant data for 2016 and 2019
 ## Output
 #' @output models/ates_ex_gm_all_df Ates using various methods
 ###

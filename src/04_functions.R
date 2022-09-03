@@ -143,6 +143,8 @@ gen_samples <- function(df) {
                                  c("geslacht", "herkomst", "huishoudsamenstelling"),
                                remove_selected_columns = T)
   
+  ## For internal memory purposes split the data when consisting
+  ## of more than 10 million observations
   if (nrow(X_sample) > 10000000) {
     X_sample_dummies_comb <- rbind(
       X_sample_dummies[1 : 10000000, ] %>%
@@ -158,12 +160,41 @@ gen_samples <- function(df) {
                               remove_selected_columns = T)
   }
   
+  ## Remove irrelevant dummy for male
   X_sample_dummies_comb$geslacht_man <- NULL
+  
   ## Sample analysis excluding gem
   W_sample <- X_sample$treat
   X_sample_matrix_ex_gm <- as.matrix(X_sample_dummies_comb %>%
                                        dplyr::select(-contains("gem_2019")))
   X_sample_matrix_inc_gm <- as.matrix(X_sample_dummies_comb)
   Y_sample <- df$y
-  return(list(X_sample_matrix_ex_gm, X_sample_matrix_inc_gm, W_sample, Y_sample))
+  return(list(
+    X_sample_matrix_ex_gm, X_sample_matrix_inc_gm,
+    W_sample, Y_sample)
+         )
+}
+
+## 04c_ct_heterogeneity.R
+estimate_CT <- function(data_train, data_test, seed=1704, minsize = 2500) {
+  ## Function to estimate a CausalTree
+  #' @param data_train training data
+  #' @param data_test testing data
+  #' @param seed seed
+  #' @return estimated CausalTree
+  
+  t1 <- Sys.time()
+  set.seed(seed)
+  honestTree <- honest.causalTree(
+    y ~ .,
+    data = data_train,
+    treatment = data_train$treat,
+    est_data = data_test,
+    est_treatment = data_test$treat,
+    split.Rule = "CT", split.Honest = T,
+    HonestSampleSize = nrow(data_test), cv.option = "fit",
+    cv.Honest = F, minsize = minsize)
+  t2 <- Sys.time()
+  print(t2 - t1)
+  return(honestTree)
 }
