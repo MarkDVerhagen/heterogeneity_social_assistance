@@ -86,3 +86,5 @@ This script generates basic model insights when relating social assistance use t
 This script estimates the main models for the results section including ATEs using conventional methods and the Causal Tree and GRF approaches.
 
 *04a_gen_ates.R* : Script to generate ATEs using covariate balancing, entropy balancing and propensity score matching.
+*04b_grf_heterogeneity.R* : Script to generate causal forests for a sample of the entire data set (including municipality coeds) and excluding municipality codes
+*04c_ct_heterogeneity.R* : Script to generate causal trees for the alternate municipalities and the set of consistent municipalities
