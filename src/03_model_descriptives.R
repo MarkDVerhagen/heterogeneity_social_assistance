@@ -4,7 +4,7 @@
 ## random intercepts, robustness when including education and OOS prediction
 ## of municipality level use
 ## Input:
-#' @input full_df_2016_2019_inc dataset including all relevant data for 2016 and 2019
+#' @input df_2016_2019_inc dataset including all relevant data for 2016 and 2019
 #' @input H:/data/education/2016/rin_educ Dataframe w education for the 2016 population
 #' @input H:/data/education/2019/rin_educ Dataframe w education for the 2016 population
 ## Output:
