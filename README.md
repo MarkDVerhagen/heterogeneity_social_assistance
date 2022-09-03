@@ -52,9 +52,13 @@ This set of scripts is used to merge and clean data at the registry level for an
 These are located in the `H:/data/` folder within CBS' secure Remote Access Environment which is a folder that is not reflected in this repository.
 
 *00a_gen_wmo_demog_data.R* : Merge demographic data with social assistance use data
+
 *00b_gen_municipality_crosswalk.R* : Account for mergers amongst municipalities
+
 *00c_gen_continuous_income_data.R* : Change income data to a numeric
+
 *00_fetch_educ.do* : Get education data from `.dta` files
+
 *00_fetch_num_income.do* : Get income data from `.dta` files
 
 ### 01.* scripts
