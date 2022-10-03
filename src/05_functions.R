@@ -1,82 +1,97 @@
+## Functions for scripts 04
+
 
 format_names <- function(df) {
   names(df) <- tolower(names(df))
   names(df) <- gsub("-", "_", names(df))
   return(df)
 }
+    
+extract_temp <- function(str) {
+  ## function to extract the variable to which a parsed rule pertains to
+  #' @param str String to extract variable from
+  #' @return 
+  
+  var_temp <- gsub(" & .*", "", str)
+  str <- gsub(paste0(var_temp, " & "), "", str)
+  return(list(var_temp, str))
+}
+    
+assign_val <- function(var_list, var = "income_sm") {
+  ##
+  #' @param var_list String with parsed variable conditions
+  #' @param var Variable of interest
+  return_var <- var_list[grepl(var, var_list)]
+  return(ifelse(is.null(return_var), NA, return_var)) 
+}
 
 generate_result_df <- function(rules_df) {
   ## Function to parse a set or RPart rules into a dataframe
-  #' @param rules Set of RPart rules
+  ## consisting of the variable j and split value s used
+  #' @param rules_df Set of RPart rules as dataframe
   #' @return Dataframe version of RPart rules
-  
+
+  # Add node ids
   result_df <- data.frame(node = 1:nrow(rules_df))
-  
+
+  # Make character description of the rules
   for (row in c(1:nrow(rules_df))) {
     str <- tolower(paste(rules_df[row, ], collapse = " "))
-    
+  
+    # some cleaning
     y_temp <- gsub(" when.*", "", str)
-    
     str <- gsub(y_temp, "", str)
-    
-    extract_temp <- function(str) {
-      ##
-      #' @param str String to extract variable from
-      
-      var_temp <- gsub(" & .*", "", str)
-      str <- gsub(paste0(var_temp, " & "), "", str)
-      return(list(var_temp, str))
-    }
-    
+
     var_list <- c()
-    
+
     while (grepl("&", str)) {
       extract <- extract_temp(str)
       var_list <- c(var_list, extract[[1]])
       str <- extract[[2]]
     }
     var_list <- c(var_list, gsub("  ", "", str))
-    
-    ## Assign to df
+
+    ## Assign split value to relevant column
     result_df$y[row] <- as.numeric(y_temp)
-    
     result_df$income_sm[row] <- assign_val(var_list, var = "income_sm")
-    
     result_df$leeftijd[row] <- assign_val(var_list, var = "leeftijd")
     result_df$h_nederlands[row] <- assign_val(var_list, var = "h_nederlands")
     result_df$h_westers[row] <- assign_val(var_list, var = "h_westers")
     result_df$h_niet_westers[row] <- assign_val(var_list, var = "h_niet-westers")
-    
-    result_df$hh_eenpersoonshuishouden[row] <- assign_val(var_list, var = "hh_eenpersoonshuishouden")
-    result_df$`hh_paar zonder kinderen`[row] <- assign_val(var_list, var = "hh_paar zonder kinderen")
-    result_df$`hh_paar met kinderen`[row] <- assign_val(var_list, var = "hh_paar met kinderen")
-    result_df$hh_eenouderhuishouden[row] <- assign_val(var_list, var = "hh_eenouderhuishouden")
-    result_df$`hh_inst_onbekend`[row] <- assign_val(var_list, var = "hh_inst_onbekend")
-    result_df$`hh_overig meerpersoonshuishouden`[row] <- assign_val(var_list, var = "hh_overig meerpersoonshuishouden")
-    
-    result_df$geslacht[row] <- assign_val(var_list, var = "geslacht")
+    result_df$hh_eenpersoonshuishouden[row] <- assign_val(
+      var_list, var = "hh_eenpersoonshuishouden")
+    result_df$`hh_paar zonder kinderen`[row] <- assign_val(
+      var_list, var = "hh_paar zonder kinderen"
+      )
+    result_df$`hh_paar met kinderen`[row] <- assign_val(
+      var_list, var = "hh_paar met kinderen"
+      )
+    result_df$hh_eenouderhuishouden[row] <- assign_val(
+      var_list, var = "hh_eenouderhuishouden"
+      )
+    result_df$`hh_inst_onbekend`[row] <- assign_val(
+      var_list, var = "hh_inst_onbekend"
+      )
+    result_df$`hh_overig meerpersoonshuishouden`[row] <- assign_val(
+      var_list, var = "hh_overig meerpersoonshuishouden"
+      )
+    result_df$geslacht[row] <- assign_val(
+      var_list, var = "geslacht"
+      )
   }
-  
+
   for (col in names(result_df)[grepl("^h|geslacht", names(result_df))]) {
     result_df[[col]] <- format_binary(result_df[[col]])
   }
-  
+
   result_df$leeftijd <- format_age(result_df$leeftijd)
   result_df$income_sm <- format_income(result_df$income_sm)
   result_df <- add_min_max_age(result_df)
   result_df <- add_min_max_income(result_df)
-  
+
   return(result_df)
 }
 
-assign_val <- function(var_list, var = "income_sm") {
-  ##
-  #' @param var_list String with parsed variable conditions
-  #' @param var Variable of interest
-  return_var <- var_list[grepl(var, var_list)]
-  return(ifelse(is.null(return_var), NA, return_var))
-  
-}
 
 format_age <- function(x) {
   #' @param x Column with unformatted age rules
